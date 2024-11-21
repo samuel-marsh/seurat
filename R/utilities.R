@@ -174,6 +174,7 @@ AddAzimuthScores <- function(object, filename) {
 #' head(x = pbmc_small[])
 #' }
 #'
+
 AddModuleScore <- function(
   object,
   features,
@@ -182,7 +183,7 @@ AddModuleScore <- function(
   ctrl = 100,
   k = FALSE,
   assay = NULL,
-  name = 'Cluster',
+  name = NULL,
   seed = 1,
   search = FALSE,
   slot = 'data',
@@ -317,7 +318,20 @@ AddModuleScore <- function(
     features.scores[i, ] <- Matrix::colMeans(x = data.use)
   }
   features.scores.use <- features.scores - ctrl.scores
-  rownames(x = features.scores.use) <- paste0(name, 1:cluster.length)
+
+  if (is.null(x = name)) {
+    name <- "Cluster"
+    rownames(x = features.scores.use) <- paste0(name, 1:cluster.length)
+  } else {
+    if (length(x = name) != cluster.length) {
+      rownames(x = features.scores.use) <- paste0(name, 1:cluster.length)
+    }
+    if (length(x = anyDuplicated(x = name)) > 0) {
+      stop("The values provided to name are not unique.")
+    }
+    rownames(x = features.scores.use) <- paste0(name, 1:cluster.length)
+  }
+
   features.scores.use <- as.data.frame(x = t(x = features.scores.use))
   rownames(x = features.scores.use) <- colnames(x = object)
   object[[colnames(x = features.scores.use)]] <- features.scores.use
@@ -1204,7 +1218,7 @@ PercentageFeatureSet <- function(
 #' @param object Seurat object
 #' @param method Whether to 'average' (default) or 'aggregate' expression levels
 #' @param assay  The name of the passed assay - used primarily for warning/error messages
-#' @param category.matrix A matrix defining groupings for pseudobulk expression 
+#' @param category.matrix A matrix defining groupings for pseudobulk expression
 #' calculations; each column represents an identity class, and each row a sample
 #' @param features Features to analyze. Default is all features in the assay
 #' @param layer Layer(s) to user; if multiple are given, assumed to follow
@@ -1351,10 +1365,10 @@ PseudobulkExpression.StdAssay <- function(
 
 #' @param assays Which assays to use. Default is all assays
 #' @param return.seurat Whether to return the data as a Seurat object. Default is FALSE
-#' @param group.by Categories for grouping (e.g, "ident", "replicate", 
+#' @param group.by Categories for grouping (e.g, "ident", "replicate",
 #' "celltype"); "ident" by default
 #' @param add.ident (Deprecated) See group.by
-#' @param method The method used for calculating pseudobulk expression; one of: 
+#' @param method The method used for calculating pseudobulk expression; one of:
 #' "average" or "aggregate"
 #' @param normalization.method Method for normalization, see \code{\link{NormalizeData}}
 #' @param scale.factor Scale factor for normalization, see \code{\link{NormalizeData}}
@@ -2940,7 +2954,7 @@ BuildNicheAssay <- function(
   )
   rownames(cell.type.mtx) <- cells
   colnames(cell.type.mtx) <- groups
-  # populate the binary matrix 
+  # populate the binary matrix
   cells.idx <- seq_along(cells)
   group.idx <- match(group.labels, groups)
   cell.type.mtx[cbind(cells.idx, group.idx)] <- 1
