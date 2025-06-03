@@ -474,6 +474,7 @@ FindClusters.Seurat <- function(
     resolution = resolution,
     algorithm = algorithm,
     leiden_method = leiden_method,
+    leiden_objective_function = leiden_objective_function,
     n.start = n.start,
     n.iter = n.iter,
     random.seed = random.seed,
