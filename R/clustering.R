@@ -284,6 +284,11 @@ PredictAssay <- function(
 #' @param algorithm Algorithm for modularity optimization (1 = original Louvain
 #' algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM
 #' algorithm; 4 = Leiden algorithm).
+#' @param leiden_method Chose between leidenbase or igraph packages for running leiden.
+#' Default is "leidenbase"
+#' @param leiden_objective_function objective function to use if `leiden_method = "igraph"`.
+#' See \code{\link[igraph]{cluster_leiden}} for more information.
+#' Default is "modularity".
 #' @param method DEPRECATED.
 #' @param n.start Number of random starts.
 #' @param n.iter Maximal number of iterations per random start.
