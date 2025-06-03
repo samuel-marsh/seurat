@@ -284,11 +284,6 @@ PredictAssay <- function(
 #' @param algorithm Algorithm for modularity optimization (1 = original Louvain
 #' algorithm; 2 = Louvain algorithm with multilevel refinement; 3 = SLM
 #' algorithm; 4 = Leiden algorithm).
-#' @param leiden_method Chose between leidenbase or igraph packages for running leiden.
-#' Default is "leidenbase"
-#' @param leiden_objective_function objective function to use if `leiden_method = "igraph"`.
-#' See \code{\link[igraph]{cluster_leiden}} for more information.
-#' Default is "modularity".
 #' @param method DEPRECATED.
 #' @param n.start Number of random starts.
 #' @param n.iter Maximal number of iterations per random start.
@@ -313,7 +308,6 @@ FindClusters.default <- function(
   method = deprecated(),
   algorithm = 1,
   leiden_method = c("leidenbase", "igraph"),
-  leiden_objective_function = c("modularity", "CPM"),
   n.start = 10,
   n.iter = 10,
   random.seed = 0,
@@ -341,9 +335,6 @@ FindClusters.default <- function(
   if (tolower(x = algorithm) == "leiden") {
     algorithm <- 4
   }
-  leiden_method <- match.arg(leiden_method)
-  leiden_objective_function <- match.arg(leiden_objective_function)
-
   if (nbrOfWorkers() > 1) {
     clustering.results <- future_lapply(
       X = resolution,
@@ -365,7 +356,6 @@ FindClusters.default <- function(
           ids <- RunLeiden(
             object = object,
             leiden_method = leiden_method,
-            leiden_objective_function = leiden_objective_function,
             partition.type = "RBConfigurationVertexPartition",
             initial.membership = initial.membership,
             node.sizes = node.sizes,
@@ -444,7 +434,6 @@ FindClusters.Seurat <- function(
   method = NULL,
   algorithm = 1,
   leiden_method = c("leidenbase", "igraph"),
-  leiden_objective_function = c("modularity", "CPM"),
   n.start = 10,
   n.iter = 10,
   random.seed = 0,
@@ -479,7 +468,6 @@ FindClusters.Seurat <- function(
     resolution = resolution,
     algorithm = algorithm,
     leiden_method = leiden_method,
-    leiden_objective_function = leiden_objective_function,
     n.start = n.start,
     n.iter = n.iter,
     random.seed = random.seed,
@@ -1672,7 +1660,7 @@ NNHelper <- function(data, query = data, k, method, cache.index = FALSE, ...) {
 #' @param method DEPRECATED.
 #' @param leiden_method Chose between leidenbase or igraph packages for running leiden.
 #' Default is "leidenbase"
-.#' @param partition.type Type of partition to use for Leiden algorithm.
+#' @param partition.type Type of partition to use for Leiden algorithm.
 #' Defaults to "RBConfigurationVertexPartition", see
 #' https://cran.rstudio.com/web/packages/leidenbase/leidenbase.pdf for more options.
 #' @param leiden_objective_function objective function to use if `leiden_method = "igraph"`.
@@ -1741,6 +1729,15 @@ RunLeiden <- function(
   }
 
   leiden_method <- match.arg(leiden_method)
+
+  if (leiden_method == "igraph") {
+    # adjust seed for igraph leiden
+    #Set seed without permanently changing seed state
+    prev_seed <- get_seed()
+    on.exit(restore_seed(prev_seed), add = TRUE)
+    set.seed(random.seed)
+  }
+
 
   # Convert `object` into an `igraph`.
   # If `object` is already an `igraph` no conversion is necessary.
