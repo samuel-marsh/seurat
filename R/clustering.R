@@ -402,7 +402,7 @@ FindClusters.default <- function(
       } else if (algorithm == 4) {
         ids <- RunLeiden(
           object = object,
-          leiden_method = c("leidenbase", "igraph"),
+          leiden_method = leiden_method,
           leiden_objective_function = leiden_objective_function,
           method = method,
           partition.type = "RBConfigurationVertexPartition",
