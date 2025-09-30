@@ -6775,7 +6775,7 @@ BlendExpression <- function(data) {
 #
 #' @importFrom grid unit
 #' @importFrom cowplot theme_cowplot
-#' @importFrom ggplot2 ggplot aes_string scale_fill_manual geom_raster
+#' @importFrom ggplot2 ggplot scale_fill_manual geom_raster
 #' theme scale_y_continuous scale_x_continuous scale_fill_manual
 #
 # @seealso \code{\link{BlendMatrix}}
@@ -6798,7 +6798,7 @@ BlendMap <- function(color.matrix) {
   color.heat$vals <- factor(x = color.heat$vals)
   plot <- ggplot(
     data = color.heat,
-    mapping = aes_string(x = 'rows', y = 'cols', fill = 'vals')
+    mapping = aes(x = .data[['rows']], y = .data[['cols']], fill = .data[['vals']])
   ) +
     geom_raster(show.legend = FALSE) +
     theme(plot.margin = unit(x = rep.int(x = 0, times = 4), units = 'cm')) +
