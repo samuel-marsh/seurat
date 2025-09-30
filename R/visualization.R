@@ -9068,11 +9068,11 @@ SingleImagePlot <- function(
   # Assemble plot
   plot <- ggplot(
     data = data %NA% NULL,
-    mapping = aes_string(
-      x = 'y',
-      y = 'x',
-      alpha = 'boundary',
-      fill = col.by %NA% NULL
+    mapping = aes(
+      x = .data[['y']],
+      y = .data[['x']],
+      alpha = .data[['boundary']],
+      fill = .data[[col.by]] %NA% NULL
     )
   )
   if (!is_na(x = data)) {
@@ -9083,7 +9083,7 @@ SingleImagePlot <- function(
           border.size <- 0.3
         }
         geom_polygon(
-          mapping = aes_string(group = 'cell'),
+          mapping = aes(group = .data[['cell']]),
           color = border.color,
           size = border.size
         )
@@ -9144,7 +9144,7 @@ SingleImagePlot <- function(
         )
       }
       plot <- plot + geom_point(
-        mapping = aes_string(fill = NULL, alpha = NULL, color = "molecule"),
+        mapping = aes(fill = NULL, alpha = NULL, color = .data[["molecule"]]),
         data = molecules,
         size = mols.size,
         alpha = mols.alpha,
