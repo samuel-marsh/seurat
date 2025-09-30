@@ -8988,7 +8988,7 @@ SingleImageMap <- function(data, order = NULL, title = NULL) {
 #' @importFrom rlang is_na
 #' @importFrom SeuratObject %NA% %!NA%
 #' @importFrom RColorBrewer brewer.pal.info
-#' @importFrom ggplot2 aes_string geom_point geom_polygon ggplot guides
+#' @importFrom ggplot2 geom_point geom_polygon ggplot guides
 #' guide_legend scale_alpha_manual scale_color_manual scale_fill_brewer
 #' scale_fill_manual
 #'
@@ -9179,13 +9179,13 @@ SingleImagePlot <- function(
 # @return A ggplot-based plot
 #
 #' @importFrom cowplot theme_cowplot
-#' @importFrom ggplot2 ggplot aes_string geom_polygon
+#' @importFrom ggplot2 ggplot geom_polygon
 #
 # @seealso \code{\link[cowplot]{theme_cowplot}}
 #
 SinglePolyPlot <- function(data, group.by, ...) {
   plot <- ggplot(data = data, mapping = aes_string(x = 'x', y = 'y')) +
-    geom_polygon(mapping = aes_string(fill = group.by, group = 'cell')) +
+    geom_polygon(mapping = aes(fill = .data[[group.by]], group = .data[['cell']])) +
     coord_fixed() +
     theme_cowplot(...)
   return(plot)
