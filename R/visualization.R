@@ -6128,7 +6128,7 @@ LabelClusters <- function(
 #' @return A ggplot object
 #'
 #' @importFrom ggrepel geom_text_repel
-#' @importFrom ggplot2 geom_text aes_string
+#' @importFrom ggplot2 geom_text
 #' @export
 #' @concept visualization
 #'
@@ -6171,7 +6171,7 @@ LabelPoints <- function(
     }
   }
   plot <- plot + geom.use(
-    mapping = aes_string(x = xynames$x, y = xynames$y, label = 'labels'),
+    mapping = aes(x = .data[[xynames$x]], y = .data[[xynames$y]], label = .data[['labels']]),
     data = label.data,
     nudge_x = xnudge,
     nudge_y = ynudge,
