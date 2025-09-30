@@ -907,7 +907,7 @@ DimPlot <- function(
   dims <- paste0(Key(object = object[[reduction]]), dims)
   orig.groups <- group.by
   group.by <- group.by %||% 'ident'
-  
+
   if (label & (label.size.cutoff > 0)) {
     labels <- FetchData(object, group.by)
     for(i in seq_along(group.by)) {
@@ -921,7 +921,7 @@ DimPlot <- function(
     object <- AddMetaData(object,labels)
     group.by <- colnames(labels)
   }
-  
+
   data <- FetchData(
     object = object,
     vars = c(dims, group.by),
@@ -4021,7 +4021,7 @@ InteractiveSpatialPlot <- function(
     if (type == "visium" && "image" %in% slotNames(image_obj)) {
       img_raster <- image_obj@image
     } else if (
-      type == "vizgen" && 
+      type == "vizgen" &&
       "boundaries" %in% slotNames(image_obj) &&
       "centroids" %in% slotNames(image_obj@boundaries) &&
       "image" %in% slotNames(image_obj@boundaries$centroids)
@@ -4086,7 +4086,7 @@ InteractiveSpatialPlot <- function(
         )
       }
 
-      # Lock axes to same scale and reverse y for image alignment 
+      # Lock axes to same scale and reverse y for image alignment
       # Set lasso mode
       plt <- plt %>% plotly::layout(
         dragmode = "lasso",
@@ -5134,7 +5134,7 @@ PlotClusterTree <- function(object, direction = "downwards", ...) {
 #'
 #' @importFrom patchwork wrap_plots
 #' @importFrom cowplot theme_cowplot
-#' @importFrom ggplot2 ggplot aes_string geom_point labs
+#' @importFrom ggplot2 ggplot geom_point labs
 #' @export
 #' @concept visualization
 #'
@@ -5189,7 +5189,7 @@ VizDimLoadings <- function(
       data.plot$feature <- factor(x = rownames(x = data.plot), levels = rownames(x = data.plot))
       plot <- ggplot(
         data = data.plot,
-        mapping = aes_string(x = colnames(x = data.plot)[1], y = 'feature')
+        mapping = aes(x = .data[[paste0(Key(object = object[[reduction]]), i)]], y = .data[['feature']])
       ) +
         geom_point(col = col) +
         labs(y = NULL) + theme_cowplot()
@@ -5220,7 +5220,7 @@ VizDimLoadings <- function(
 #' @return A ggplot object
 #'
 #' @importFrom png readPNG
-#' @importFrom ggplot2 ggplot_build ggsave ggplot aes_string geom_blank annotation_raster ggtitle
+#' @importFrom ggplot2 ggplot_build ggsave ggplot geom_blank annotation_raster ggtitle
 #'
 #' @export
 #' @concept visualization
@@ -5255,7 +5255,7 @@ AugmentPlot <- function(plot, width = 10, height = 10, dpi = 100) {
   file.remove(tmpfile)
   blank <- ggplot(
     data = plot$data,
-    mapping = aes_string(x = xyparams$x, y = xyparams$y)
+    mapping = aes(x = .data[[xyparams$x]], y = .data[[xyparams$y]])
   ) + geom_blank()
   blank <- blank + plot$theme + ggtitle(label = title)
   blank <- blank + annotation_raster(
