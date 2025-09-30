@@ -7782,7 +7782,7 @@ MakeLabels <- function(data) {
 #' @importFrom utils globalVariables
 #' @importFrom stats rnorm dist hclust
 #' @importFrom ggridges geom_density_ridges theme_ridges
-#' @importFrom ggplot2 ggplot aes_string facet_grid theme labs geom_rect
+#' @importFrom ggplot2 ggplot facet_grid theme labs geom_rect
 #' geom_violin geom_jitter ylim position_jitterdodge scale_fill_manual
 #' scale_y_log10 scale_x_log10 scale_y_discrete scale_x_continuous
 #' scale_y_continuous waiver
@@ -7922,7 +7922,7 @@ MultiExIPlot <- function(
   }
   plot <- ggplot(
     data = data,
-    mapping = aes_string(x = x, y = y, fill = fill.by)[c(2, 3, 1)]
+    mapping = aes(x = .data[[x]], y = .data[[y]], fill = .data[[fill.by]])[c(2, 3, 1)]
   ) +
     labs(x = x.label, y = y.label, fill = NULL) +
     theme_cowplot()
@@ -8260,7 +8260,7 @@ globalVariables(names = '..density..', package = 'Seurat')
 #' @importFrom stats cor
 #' @importFrom cowplot theme_cowplot
 #' @importFrom RColorBrewer brewer.pal.info
-#' @importFrom ggplot2 ggplot aes_string geom_point labs scale_color_brewer
+#' @importFrom ggplot2 ggplot geom_point labs scale_color_brewer
 #' scale_color_manual guides stat_density2d aes scale_fill_continuous
 #' @importFrom scattermore geom_scattermore
 #'
@@ -8361,7 +8361,7 @@ SingleCorPlot <- function(
   }
   plot <- ggplot(
     data = data,
-    mapping = aes_string(x = names.plot[1], y = names.plot[2])
+    mapping = aes(x = .data[[names.plot[1]]], y = .data[[names.plot[2]]])
     ) +
     labs(
       x = orig.names[1],
@@ -8405,14 +8405,14 @@ SingleCorPlot <- function(
   if (!is.null(x = col.by)) {
     if (raster) {
       plot <- plot + geom_scattermore(
-        mapping = aes_string(color = 'colors'),
+        mapping = aes(color = .data[['colors']]),
         position = position,
         pointsize = pt.size,
         pixels = raster.dpi
       )
     } else {
       plot <- plot + geom_point(
-        mapping = aes_string(color = 'colors'),
+        mapping = aes(color = .data[['colors']]),
         position = position,
         size = pt.size
       )
@@ -8438,7 +8438,7 @@ SingleCorPlot <- function(
   plot <- plot + theme_cowplot() + theme(plot.title = element_text(hjust = 0.5))
   if (!is.null(x = span)) {
     plot <- plot + geom_smooth(
-      mapping = aes_string(x = names.plot[1], y = names.plot[2]),
+      mapping = aes(x = .data[[names.plot[1]]], y = .data[[names.plot[2]]]),
       method = 'loess',
       span = span
     )
