@@ -128,7 +128,7 @@ CalcPerturbSig <- function(
 #' positive DE genes.If false, only positive DE gene will be displayed.
 #' @param max.genes Maximum number of genes to use as input to enrichR.
 #' @param logfc.threshold Limit testing to genes which show, on average, at least
-#' X-fold difference (log-scale) between the two groups of cells. Default is 0.25. 
+#' X-fold difference (log-scale) between the two groups of cells. Default is 0.25.
 #' Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' @param p.val.cutoff Cutoff to select DE genes.
 #' @param cols A list of colors to use for barplots.
@@ -247,14 +247,14 @@ DEenrichRPlot <- function(
 
     if (isTRUE(x = balanced)) {
 
-      p2 <- ggplot(data = neg.er, aes_string(x = "term", y = "log10pval")) +
+      p2 <- ggplot(data = neg.er, aes(x = .data[["term"]], y = .data[["log10pval"]])) +
         geom_bar(stat = "identity", fill = "indianred2") +
         coord_flip() + xlab("Pathway") +
         scale_fill_manual(values = cols, drop = FALSE) +
         ylab("-log10(pval)") +
         ggtitle(paste(enrich.database, ident.1, sep = "_", "negative markers")) +
         theme_classic() +
-        geom_text(aes_string(label = "term", y = 0),
+        geom_text(aes(label = .data[["term"]], y = 0),
                   size = 5,
                   color = "black",
                   position = position_dodge(1),
@@ -271,14 +271,14 @@ DEenrichRPlot <- function(
   }
 
   else {
-  p <- ggplot(data = pos.er, aes_string(x = "term", y = "log10pval")) +
+  p <- ggplot(data = pos.er, aes(x = .data[["term"]], y = .data[["log10pval"]])) +
     geom_bar(stat = "identity", fill = "dodgerblue") +
     coord_flip() + xlab("Pathway") +
     scale_fill_manual(values = cols, drop = FALSE) +
     ylab("-log10(pval)") +
     ggtitle(paste(enrich.database, ident.1, sep = "_", "positive markers")) +
     theme_classic() +
-    geom_text(aes_string(label = "term", y = 0),
+    geom_text(aes(label = .data[["term"]], y = 0),
               size = 5,
               color = "black",
               position = position_dodge(1),
@@ -288,14 +288,14 @@ DEenrichRPlot <- function(
           axis.ticks.y = element_blank())
   if (isTRUE(x = balanced)) {
 
-    p2 <- ggplot(data = neg.er, aes_string(x = "term", y = "log10pval")) +
+    p2 <- ggplot(data = neg.er, aes(x = .data[["term"]], y = .data[["log10pval"]])) +
       geom_bar(stat = "identity", fill = "indianred2") +
       coord_flip() + xlab("Pathway") +
       scale_fill_manual(values = cols, drop = FALSE) +
       ylab("-log10(pval)") +
       ggtitle(paste(enrich.database, ident.1, sep = "_", "negative markers")) +
       theme_classic() +
-      geom_text(aes_string(label = "term", y = 0),
+      geom_text(aes(label = .data[["term"]], y = 0),
                 size = 5,
                 color = "black",
                 position = position_dodge(1),
@@ -371,7 +371,7 @@ MixscapeLDA <- function(
 #' @param npcs Number of principle components to use.
 #' @param verbose Print progress bar.
 #' @param logfc.threshold Limit testing to genes which show, on average, at least
-#' X-fold difference (log-scale) between the two groups of cells. Default is 0.25. 
+#' X-fold difference (log-scale) between the two groups of cells. Default is 0.25.
 #' Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' @return Returns a list of the first 10 PCs from each projection.
 #'
@@ -872,7 +872,7 @@ RunMixscape <- function(
 #' @param max.genes Total number of DE genes to plot.
 #' @param balanced Plot an equal number of genes with both groups of cells.
 #' @param logfc.threshold Limit testing to genes which show, on average, at least
-#' X-fold difference (log-scale) between the two groups of cells. Default is 0.25. 
+#' X-fold difference (log-scale) between the two groups of cells. Default is 0.25.
 #' Increasing logfc.threshold speeds up the function, but can miss weaker signals.
 #' @param order.by.prob Order cells on heatmap based on their mixscape knockout
 #' probability from highest to lowest score.
