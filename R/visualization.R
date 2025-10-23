@@ -4502,7 +4502,7 @@ SpatialPlot <- function(
       )
 
       #Check if object contains a sf slot (attached via Load10X_Spatial)
-      #If so, use sf-geometry based rendering 
+      #If so, use sf-geometry based rendering
       use_geom_sf <- (inherits(image.use, "VisiumV2") &&
                       !is.null(image.use@boundaries$segmentation) &&
                       "sf.data" %in% slotNames(image.use@boundaries$segmentation))
@@ -6218,7 +6218,7 @@ LabelClusters <- function(
       mapping = aes(x = .data[[xynames['x']]], y = .data[[xynames['y']]], label = .data[[id]], fill = .data[[id]]),
       show.legend = FALSE,
       ...
-    )
+    ) + scale_fill_manual(values = labels.loc$color[order(labels.loc[, id])])
   } else {
     geom.use <- ifelse(test = repel, yes = geom_text_repel, no = geom_text)
     plot <- plot + geom.use(
@@ -9555,9 +9555,9 @@ SingleSpatialPlot <- function(
       # Retrieve image dimensions for later use (flipping image)
       image.height <- dim(image@image)[1]
       image.width <- dim(image@image)[2]
-      
-      # Retrieve the sf data stored in the Visium V2 object 
-      # Merge it with data dataframe which contains ident and gene expression information 
+
+      # Retrieve the sf data stored in the Visium V2 object
+      # Merge it with data dataframe which contains ident and gene expression information
       sf.data = image@boundaries$segmentation@sf.data
 
       # Scale geometry to match image scale
@@ -9612,14 +9612,14 @@ SingleSpatialPlot <- function(
       #Plot (currently independently of switch/case)
       if(!plot_segmentations){
         #If plot_segmentations FALSE, then plot just the centroids from sf data
-        
+
         if (is.null(pt.alpha)) {
           #If pt.alpha not provided, then alpha parameter is derived from group/cluster data
           #Use alpha.by instead of pt.alpha
           geom_point_layer <- geom_point(
-            shape = 21, 
-            stroke = stroke, 
-            size = pt.size.factor, 
+            shape = 21,
+            stroke = stroke,
+            size = pt.size.factor,
             aes_string(fill = col.by, alpha = alpha.by)
           )
         } else {
@@ -9628,7 +9628,7 @@ SingleSpatialPlot <- function(
             shape = 21,
             stroke = stroke,
             size = pt.size.factor,
-            aes_string(fill = col.by), 
+            aes_string(fill = col.by),
             alpha = if (is.null(pt.alpha)) 1 else pt.alpha
           )
         }
@@ -9645,10 +9645,10 @@ SingleSpatialPlot <- function(
           xlab("x") +
           ylab("y") +
           theme_minimal()
-      
+
       }else{
         #If plot_segmentations TRUE, then use geometry data stored in sf to plot cell polygons
-        
+
         if (is.null(pt.alpha)) {
           #If pt.alpha not provided, then alpha parameter is derived from group/cluster data
           #Use alpha.by instead of pt.alpha
@@ -9666,7 +9666,7 @@ SingleSpatialPlot <- function(
             alpha = if (is.null(pt.alpha)) 1 else pt.alpha,
             color = "black",
             linewidth = stroke
-          ) 
+          )
         }
         ggplot() +
             annotation_custom(
