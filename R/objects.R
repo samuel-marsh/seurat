@@ -1326,6 +1326,27 @@ as.SingleCellExperiment.Seurat <- function(x, assay = NULL, ...) {
   if (!all(assay %in% Assays(object = x))) {
     stop("One or more of the assays you are trying to convert is not in the Seurat object")
   }
+
+  # Equal Number of Cells check
+  check_assay_reduc_dims <- function(assay, reduction) {
+    # check all assay dims
+    cell_nums <- sapply(X = assay, FUN = function(x) {
+      length(x = Cells(x = object, assay = x))
+    })
+    if (var(x = cell_nums) != 0) {
+      stop("One or more of assays do not have them same number of cells. Ensure all assays have same number of cells before converting.")
+    }
+
+    # check dimreducs
+    reducs <- Reductions(object = object)
+    dim_cell_nums <- sapply(X = reducs, function(y) {
+      nrow(x = Embeddings(object = object, reduction = y))
+    })
+    if (var(x = cell_nums) != 0) {
+      stop("One or more of reductions do not have them same number of cells. Ensure all reductions have same number of cells before converting.")
+    }
+  }
+
   if (DefaultAssay(object = x) %in% assay) {
     assay <- union(DefaultAssay(object = x), assay)
   }
@@ -1740,7 +1761,7 @@ GetTissueCoordinates.VisiumV2 <- function(
   # do some cleanup of the resulting data.frame to make it play nice
   # with `SpatialPlot` - namely set rownames and re-order the columns so
   # that the actual position values appear first
-  
+
   # avoid extra processing for Segmentation objects,
   # otherwise "duplicate 'row.names' are not allowed" error occurs
   if (!(inherits(object[[which]], "Segmentation"))) {
@@ -2147,10 +2168,10 @@ VariableFeatures.SCTAssay <- function(
 #' @concept spatial
 #'
 ScaleFactors.SlideSeq <- function(object, ...) {
-  # The concept of image scale factors comes from the 10x Visium platform. 
+  # The concept of image scale factors comes from the 10x Visium platform.
   # Although SlideSeq has no equivalent, we still want to provide the generic
   # so that the all of our concrete `SpatialImage` classes implement the same
-  # interface, so we'll return an S3 `scalefactors` object with all values set 
+  # interface, so we'll return an S3 `scalefactors` object with all values set
   # to 1.
   return(scalefactors())
 }
@@ -2161,10 +2182,10 @@ ScaleFactors.SlideSeq <- function(object, ...) {
 #' @concept spatial
 #'
 ScaleFactors.STARmap <- function(object, ...) {
-  # The concept of image scale factors comes from the 10x Visium platform. 
+  # The concept of image scale factors comes from the 10x Visium platform.
   # Although STARmap has no equivalent, we still want to provide the generic
   # so that the all of our concrete `SpatialImage` classes implement the same
-  # interface, so we'll return an S3 `scalefactors` object with all values set 
+  # interface, so we'll return an S3 `scalefactors` object with all values set
   # to 1.
   return(scalefactors())
 }
