@@ -1328,19 +1328,19 @@ as.SingleCellExperiment.Seurat <- function(x, assay = NULL, ...) {
   }
 
   # Equal Number of Cells check
-  check_assay_reduc_dims <- function(assay, reduction) {
+  check_assay_reduc_dims <- function(assay) {
     # check all assay dims
     cell_nums <- sapply(X = assay, FUN = function(x) {
-      length(x = Cells(x = object, assay = x))
+      length(x = Cells(x = x, assay = x))
     })
     if (var(x = cell_nums) != 0) {
       stop("One or more of assays do not have them same number of cells. Ensure all assays have same number of cells before converting.")
     }
 
     # check dimreducs
-    reducs <- Reductions(object = object)
+    reducs <- Reductions(object = x)
     dim_cell_nums <- sapply(X = reducs, function(y) {
-      nrow(x = Embeddings(object = object, reduction = y))
+      nrow(x = Embeddings(object = x, reduction = y))
     })
     if (var(x = cell_nums) != 0) {
       stop("One or more of reductions do not have them same number of cells. Ensure all reductions have same number of cells before converting.")
