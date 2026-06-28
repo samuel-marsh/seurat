@@ -1327,25 +1327,23 @@ as.SingleCellExperiment.Seurat <- function(x, assay = NULL, ...) {
     stop("One or more of the assays you are trying to convert is not in the Seurat object")
   }
 
-  # Equal Number of Cells check
-  check_assay_reduc_dims <- function(assay) {
-    # check all assay dims
-    cell_nums <- sapply(X = assay, FUN = function(x) {
-      length(x = Cells(x = x, assay = x))
-    })
-    if (var(x = cell_nums) != 0) {
-      stop("One or more of assays do not have them same number of cells. Ensure all assays have same number of cells before converting.")
-    }
-
-    # check dimreducs
-    reducs <- Reductions(object = x)
-    dim_cell_nums <- sapply(X = reducs, function(y) {
-      nrow(x = Embeddings(object = x, reduction = y))
-    })
-    if (var(x = cell_nums) != 0) {
-      stop("One or more of reductions do not have them same number of cells. Ensure all reductions have same number of cells before converting.")
-    }
+  # Equal Number of Cells check assays
+  cell_nums <- sapply(X = assay, FUN = function(y) {
+    length(x = Cells(x = x, assay = y))
+  })
+  if (var(x = cell_nums) != 0) {
+    stop("One or more of assays do not have them same number of cells. Ensure all assays have same number of cells before converting.")
   }
+
+  # Equal Number of Cells check reductions
+  reduc_names <- Reductions(object = x)
+  dim_cell_nums <- sapply(X = reduc_names, function(z) {
+    nrow(x = Embeddings(object = x, reduction = z))
+  })
+  if (var(x = cell_nums) != 0) {
+    stop("One or more of reductions do not have them same number of cells. Ensure all reductions have same number of cells before converting.")
+  }
+
 
   if (DefaultAssay(object = x) %in% assay) {
     assay <- union(DefaultAssay(object = x), assay)
