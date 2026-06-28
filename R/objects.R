@@ -1331,7 +1331,7 @@ as.SingleCellExperiment.Seurat <- function(x, assay = NULL, ...) {
   cell_nums <- sapply(X = assay, FUN = function(y) {
     length(x = Cells(x = x, assay = y))
   })
-  if (var(x = cell_nums) != 0 || !is.na(x = var(x = cell_nums))) {
+  if (var(x = cell_nums) != 0 || isTRUE(is.na(x = var(x = cell_nums)))) {
     stop("One or more of assays do not have them same number of cells. Ensure all assays have same number of cells before converting.")
   }
 
@@ -1340,7 +1340,7 @@ as.SingleCellExperiment.Seurat <- function(x, assay = NULL, ...) {
   dim_cell_nums <- sapply(X = reduc_names, function(z) {
     nrow(x = Embeddings(object = x, reduction = z))
   })
-  if (var(x = cell_nums) != 0 || !is.na(x = var(x = dim_cell_nums))) {
+  if (var(x = dim_cell_nums) != 0 || isTRUE(is.na(x = var(x = dim_cell_nums)))) {
     stop("One or more of reductions do not have them same number of cells. Ensure all reductions have same number of cells before converting.")
   }
 
